@@ -21,11 +21,27 @@ def entry(request, title):
         return render(request, "encyclopedia/error.html", {"error": 1})
     
 def search(request, q=''):
+    print("LFNEJKFNJKL")
     if request.method == "GET":
 
         entries = []
         for entry in util.list_entries():
-            if q in entry:
+            if q.upper() in entry.upper():
                 entries.append(entry)
-        
-        return render(request, "encyclopedia.html", {"q": q, "entries": entries})
+
+        return render(request, "encyclopedia/search.html", {"q": q, "entries": entries})
+
+
+    elif request.method == "POST":
+        form = forms.Form(request.POST)
+        if form.is_valid():
+            q = form.cleaned_data["q"]
+            for entry in util.list_entries():
+                if q.upper() == entry.upper():
+                    return HttpResponseRedirect(reverse("entry",
+                                    kwargs={"title": entry}))
+                
+            return HttpResponseRedirect(reverse("search",
+                                            kwargs={"q": q}))
+
+
