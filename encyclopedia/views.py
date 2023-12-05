@@ -6,10 +6,18 @@ import markdown2
 
 from . import util
 
+class SearchForm(forms.Form):
+    q = forms.CharField(label="", widget=forms.TextInput(attrs={
+        "class": "search",
+        "name": "q",
+        "placeholder": "Search Encyclopedia"}))
+
 
 def index(request):
+    form = SearchForm()
     return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
+        "entries": util.list_entries(),
+        "form": form
     })
 
 def entry(request, title):
@@ -21,7 +29,6 @@ def entry(request, title):
         return render(request, "encyclopedia/error.html", {"error": 1})
     
 def search(request, q=''):
-    print("LFNEJKFNJKL")
     if request.method == "GET":
 
         entries = []
@@ -33,7 +40,7 @@ def search(request, q=''):
 
 
     elif request.method == "POST":
-        form = forms.Form(request.POST)
+        form = SearchForm(request.POST)
         if form.is_valid():
             q = form.cleaned_data["q"]
             for entry in util.list_entries():
@@ -43,5 +50,6 @@ def search(request, q=''):
                 
             return HttpResponseRedirect(reverse("search",
                                             kwargs={"q": q}))
-
-
+        
+        else:
+            return HttpResponseRedirect(reverse("index"))
