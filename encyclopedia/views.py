@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django import forms
 from django.urls import reverse
 import markdown2
-
+from random import choice
 from . import util
 
 class SearchForm(forms.Form):
@@ -53,3 +53,6 @@ def search(request, q=''):
         
         else:
             return HttpResponseRedirect(reverse("index"))
+        
+def random(request):
+    return HttpResponseRedirect(reverse("entry", kwargs={"title": choice(util.list_entries())}))
