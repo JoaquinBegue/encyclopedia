@@ -95,21 +95,29 @@ def new_page(request):
 
         if form.is_valid():
             if form.cleaned_data["title"] in util.list_entries():
+                print("NSAJFNKDASBG")
                 return render(request, "encyclopedia/error.html", {
-                    "error": 2
+                    "error": 2,
+                    "search_form": SearchForm()
                 })
             
             title = form.cleaned_data["title"]
             content = form.cleaned_data["content"]
             util.save_entry(title, content)
+
+            return HttpResponseRedirect(reverse("index"))
         
         return render(request, "encyclopedia/new_page.html", {
             "new_page_form": form,
             "search_form": SearchForm()
         })
+
+
+def edit_page(request, title):
+    if request.method == "GET":
+        content = util.get_entry(title)
+        form = NewPageForm()
     
-
-
 
 def random(request):
     return HttpResponseRedirect(reverse("entry", kwargs={

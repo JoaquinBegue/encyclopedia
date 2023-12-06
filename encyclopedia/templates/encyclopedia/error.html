@@ -7,5 +7,7 @@
 {% block body %}
   {% if error == 1 %}    
     <h1>Error: requested page doesn't exists</h1>
+  {% elif error == 2 %}
+    <h1>Error: title already in use</h1>
   {% endif %}
 {% endblock %}

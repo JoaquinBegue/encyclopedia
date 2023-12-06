@@ -5,5 +5,9 @@
 {% endblock %}
 
 {% block body %}    
-    {{ content|safe }}    
+    {{ content|safe }}
+    
+    <a href="{% url 'edit_page' entry=title %}">
+        <input type="button" value="Edit">
+    </a>
 {% endblock %}
