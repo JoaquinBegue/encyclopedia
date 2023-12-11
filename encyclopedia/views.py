@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib import messages
 
 import markdown2
 from random import choice
@@ -76,14 +77,14 @@ def new(request):
         form = forms.NewEntryForm(request.POST)
 
         if form.is_valid():
-            if form.cleaned_data["title"] in util.list_entries():
-                print("NSAJFNKDASBG")
-                return render(request, "encyclopedia/error.html", {
-                    "error": 2,
+            title = form.cleaned_data["title"]
+            if title in util.list_entries():
+                messages.error(request, f"Entry title '{title}' already in use.")
+                return render(request, "encyclopedia/new.html", {
+                    "new_entry_form": form,
                     "search_form": forms.SearchForm()
                 })
             
-            title = form.cleaned_data["title"]
             content = form.cleaned_data["content"]
             util.save_entry(title, content)
 
