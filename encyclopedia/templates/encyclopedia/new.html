@@ -1,23 +1,40 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-    New Page - Encyclopedia
+New Page - Encyclopedia
 {% endblock %}
 
 {% block body %}
+
+
+<form action="{% url 'new' %}" method="post">
+    {% csrf_token %}
     {% if messages %}
-        <ul class="messages" >
-            {% for message in messages %}
-                <li class="{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
+        <div class="grid-container-m">
+    {% else %}
+        <div class="grid-container">
     {% endif %}
+            <div class="grid-item1">
+                <h1>Create a new page</h1>
+            </div>
 
-    <h1>Create a new page:</h1>
+            <div class="grid-item2">
+                {{ new_entry_form.title }}
+                {% if messages %}
+                {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+                {% endif %}
+            </div>
 
-    <form action="{% url 'new' %}" method="post">
-        {% csrf_token %}
-        {{  new_entry_form }}
-        <input type="submit" value="Submit">
-    </form>
+
+            <div class="grid-item3">
+                <input type="submit" value="Submit">
+            </div>
+
+            <div class="grid-item4">
+                {{ new_entry_form.content }}
+            </div>
+        </div>
+</form>
 {% endblock %}
